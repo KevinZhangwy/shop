@@ -24,6 +24,12 @@ public class Member {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	public String getTruename() {
+		return truename;
+	}
+	public void setTruename(String truename) {
+		this.truename = truename;
+	}
 	public String getPwd() {
 		return pwd;
 	}
@@ -72,5 +78,6 @@ public class Member {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 
 }

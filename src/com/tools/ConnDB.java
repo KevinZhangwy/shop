@@ -27,8 +27,8 @@ public class ConnDB {
 			Class.forName(dbClassName).newInstance();	// 装载数据库驱动
              // 获取数据库连接对象
 			conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd); 
-		} catch (Exception ee) {						// 处理异常
-			ee.printStackTrace();						// 输出异常信息
+		} catch (Exception e) {						// 处理异常
+			e.printStackTrace();						// 输出异常信息
 		}
 		if (conn == null) {
 			System.err.println("DbConnectionManager.getConnection():" 
