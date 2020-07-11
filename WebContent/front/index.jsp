@@ -16,7 +16,31 @@
 	String new_picture = "";								//保存最新上架商品图片的变量
 	String typeName = "";									//保存商品分类的变量
 %>
+<%
+/* 打折商品信息 */
+ResultSet rs_sale = conn.executeQuery(
+		"select top 12 t1.ID, t1.GoodsName,t1.price,t1.nowPrice,t1.picture,t2.TypeName "
+		+"from tb_goods t1,tb_subType t2 where t1.typeID=t2.ID and t1.sale=1 "
+		+"order by t1.INTime desc");		//查询打折商品信息
+int sale_ID = 0;							//保存打折商品ID的变量
+String s_goodsname = "";					//保存打折商品名称的变量
+float s_price = 0;						//保存打折商品的原价格的变量
+float s_nowprice = 0;						//保存打折商品的打折后价格的变量
+String s_introduce = "";					//保存打折商品简介的变量
+String s_picture = "";					//保存打折商品图片的变量
 
+%>
+<%
+/* 热门商品信息 */
+ResultSet rs_hot = conn
+		.executeQuery("select top 2 ID,GoodsName,nowprice,picture "
+		+"from tb_goods order by hit desc");		//查询热门商品信息
+int hot_ID = 0;									//保存热门商品ID的变量
+String hot_goodsName = "";						//保存热门商品名称的变量
+float hot_nowprice = 0;							//保存热门商品价格的变量
+String hot_picture = "";							//保存热门商品图片的变量
+
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -90,14 +114,21 @@
 								<div class="container_oc">
 									<div class="box_oc">
 										<!-- 循环显示热门商品 ：添加两条商品信息-->
+<%
+	while (rs_hot.next()) {							//设置一个循环
+		hot_ID = rs_hot.getInt(1); 					//获取商品ID
+		hot_goodsName = rs_hot.getString(2); 			//获取商品名称
+		hot_nowprice = rs_hot.getFloat(3); 			//获取商品价格
+		hot_picture = rs_hot.getString(4); 			//获取商品图片
+%>
 
 										<div class="box-product product-grid">
 											<div>
 												<div class="image">
-													<a href="goodsDetail.jsp?ID=61"><img src="../images/goods/60.jpg" width="250px"></a>
+													<a href="goodsDetail.jsp?ID=<%=hot_ID%>"><img src="../images/goods/<%=hot_picture %>" width="250px"></a>
 													</a>
 												</div>
-												<div class="name"><a href="goodsDetail.jsp?ID=61">Sony/索尼 BDV-N9200WL</a></div>
+												<div class="name"><a href="goodsDetail.jsp?ID=<%=hot_ID%>">Sony/索尼 BDV-N9200WL</a></div>
 												<!-- 星级评分条 -->
 												<div class="rating">
 													<span class="fa fa-stack"><i
@@ -119,13 +150,13 @@
 												<!-- // 星级评分条 -->
 												<!-- 商品价格 -->
 												<div class="price">
-													<span class="price-new">价格：7038.0  元
+													<span class="price-new">价格：<%=hot_nowprice %>  元
 													</span>
 												</div>
 												<!-- // 商品价格 -->
 											</div>
 										</div>
-
+                                      <%}%>
 										<!-- // 循环显示热门商品 ：添加两条商品信息-->
 									</div>
 								</div>
@@ -171,7 +202,7 @@ while (rs_new.next()) {						//设置一个循环
 														<div class="actions">
 															<div class="image">
 																<a href="goodsDetail.jsp?ID=<%=new_ID%>">
-																<img src="../images/goods/<%=new_picture %>>" alt="<%=new_goodsname %>>" class="img-responsive"></a>
+																<img src="../images/goods/<%=new_picture %>" alt="<%=new_goodsname %>>" class="img-responsive"></a>
 															</div>
 															<div class="button-group">
 																<div class="cart">
@@ -185,7 +216,7 @@ while (rs_new.next()) {						//设置一个循环
 														</div>
 														<div class="caption">
 															<div class="name" style="height: 40px">
-																<a href="goodsDetail.jsp?<%=new_ID%>"> <span style="color: #0885B1">商品名：</span> <%=new_goodsname %></a>
+																<a href="goodsDetail.jsp?ID=<%=new_ID%>"> <span style="color: #0885B1">商品名：</span> <%=new_goodsname %></a>
 															</div>
 															<div class="name" style="margin-top: 10px"><p class="price"><%=new_nowprice %>></p></div>
 														</div>
@@ -206,18 +237,28 @@ while (rs_new.next()) {						//设置一个循环
 							<div class="container_oc">
 								<div class="row">
 									<!-- 循环显示打折商品 ：添加12条商品信息-->
+									<%
+	while (rs_sale.next()) {					//设置一个循环
+		sale_ID = rs_sale.getInt(1); 			//获取打折商品的ID
+		s_goodsname = rs_sale.getString(2); 	//获取打折商品的商品名称
+		s_price = rs_sale.getFloat(3); 		//获取打折商品的原价
+		s_nowprice = rs_sale.getFloat(4); 		//获取打折商品的现价
+		s_picture = rs_sale.getString(5); 		//获取打折商品的图片
+		typeName = rs_sale.getString(6); 		//获取打折商品的类别
+%>
+									
 										<div
 													class="product-grid col-lg-2 col-md-3 col-sm-6 col-xs-12">
 													<div class="product-thumb transition">
 														<div class="actions">
 															<div class="image">
-																<a href="goodsDetail.jsp?ID=49 "><img src="../images/goods/48.jpg"
-																	alt="Asus/华硕 顽石4代" class="img-responsive"> </a>
+																<a href="goodsDetail.jsp?ID=<%=sale_ID%> "><img src="../images/goods/<%=s_picture %>"
+																	alt="<%=s_goodsname %>" class="img-responsive"> </a>
 															</div>
 															<div class="button-group">
 																<div class="cart">
 																	<button class="btn btn-primary btn-primary" type="button" data-toggle="tooltip"
-																		onclick='javascript:window.location.href="cart_add.jsp?goodsID=49&num=1"; '
+																		onclick='javascript:window.location.href="cart_add.jsp?goodsID=<%=sale_ID%>&num=1"; '
 																		style="display: none; width: 33.3333%;" data-original-title="加入到购物车">
 																		<i class="fa fa-shopping-cart"></i>
 																	</button>
@@ -226,15 +267,16 @@ while (rs_new.next()) {						//设置一个循环
 														</div>
 														<div class="caption">
 															<div class="name" style="height: 40px">
-																<a href="goodsDetail.jsp?ID=49"
-																	style="width: 95%"> <span style="color: #0885B1">商品名：</span>Asus/华硕 顽石4代</a>
+																<a href="goodsDetail.jsp?ID=<%=sale_ID%>"
+																	style="width: 95%"> <span style="color: #0885B1">商品名：</span><%=s_goodsname %></a>
 															</div>
 															<div class="name" style="margin-top: 10px">
-																<span class="price"> 现价：5000.0 元</span><br> <span class="oldprice">原价：5499.0 元</span>
+																<span class="price"> 现价：<%=s_nowprice %>元</span><br> <span class="oldprice">原价：<%=s_price %>元</span>
 															</div>
 														</div>
 													</div>
 												</div>
+												<%} %>
 									<!-- 循环显示打折商品 ：添加12条商品信息-->
 								</div>
 							</div>

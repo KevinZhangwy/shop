@@ -11,6 +11,9 @@ body{
     text-align: center;
 }
 </style>
+<script type="text/javascript">
+ window.location.href="front/index.jsp";
+</script>
 </head>
 <body>
 欢迎访问51商城
